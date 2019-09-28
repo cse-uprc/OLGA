@@ -1,6 +1,4 @@
 import consts
-commands = {}   # list of commands and respective extensions
-extensions = [] # list of extensions
 
 class OutputObject:
     # The Olga Output Object is meant
@@ -15,35 +13,29 @@ def makeOOO(text=None, error=None):
     OOO.error = error
     return OOO
 
-def init():
-    global commands
-    global extensions
-    # Get commands
-    with open(consts.COMMANDS_FILE, "r") as f:
-        for line in f:
-            commands[line.split(",")[0]] = line.split(",")[1]   # setting command dictionary
-            if not line.split(",")[1] in extensions:
-                extensions.append(line.split(",")[1])   # list of all extensions
-    
-    # Get front end
-    with open(consts.CONFIG_FILE, "r") as f:
-        for line in f:
-            if "FRONT-END:" in line:
-                frontEnd = line.replace("FRONT-END:", "")
-    
-    front = __import__("Front-Ends."+frontEnd, globals(), locals(), ["init"])
-    front.init()
-    
+class OLGA:
+    # OLGA acts as a mediator between front-end and extensions
+    def __init__(self):
+        self.commands = {}   # list of commands and respective extensions
+        self.extensions = [] # list of extensions
 
-def run(command):
-    global commands
-    global extensions
-    if command in commands.keys():
-        extension = __import__(("Extensions."+commands[command]), globals(), locals() ["listen"])
-        output = extension.listen(command)
-    else:
-        output = makeOOO(error="Command Unknwon")
-    return output
+        # Get commands and extensions
+        with open(consts.COMMANDS_FILE, "r") as f:
+            for line in f:
+                # setting command dictionary
+                self.commands[line.split(",")[0]] = line.split(",")[1]
+                if not line.split(",")[1] in self.extensions:
+                    # list of all extensions
+                    self.extensions.append(line.split(",")[1])
+        
 
-if __name__ == "__main__":
-    init()
+    def run(self, command):
+        # Take command from user and check for a exact match in the commands dictionary
+        if command in self.commands.keys():
+            extension = __import__(("Extensions."+self.commands[command]),
+             globals(), locals(), ["listen"])
+            output = extension.listen(command)
+        else:
+            # There was no matching command in the commands dictionary
+            output = makeOOO(error="Command Unknwon")
+        return output
