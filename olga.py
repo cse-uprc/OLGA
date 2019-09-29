@@ -23,7 +23,7 @@ class OLGA:
         with open(consts.COMMANDS_FILE, "r") as f:
             for line in f:
                 # setting command dictionary
-                self.commands[line.split(",")[0]] = line.split(",")[1]
+                self.commands[line.split(",")[0]] = line.split(",")[1].replace("\n", "")
                 if not line.split(",")[1] in self.extensions:
                     # list of all extensions
                     self.extensions.append(line.split(",")[1])
