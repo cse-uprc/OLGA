@@ -83,9 +83,12 @@ def listen(command):
 def watchdog():
     cpuinfo = os.uname()
     if (cpuinfo[4] != 'armv71'):
+        print(cpuinfo)
         threadFile = open("threads.data", "w")
         threadFile.write("watchdog:False")
         return None
+    
+    print("Hey!")
     
     import RPi.GPIO as GPIO
     import time
