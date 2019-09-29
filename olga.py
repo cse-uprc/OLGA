@@ -31,6 +31,7 @@ class OLGA:
 
     def run(self, command):
         # Take command from user and check for a exact match in the commands dictionary
+        output = None
         if command.split(" ")[0] in self.commands.keys():
             extension = __import__(("Extensions."+self.commands[command.split(" ")[0]]).replace("\n",""),
              globals(), locals(), ["listen"])

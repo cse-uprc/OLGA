@@ -41,6 +41,11 @@ def callWord():
     output = olgaInstance.run("word")
     processOutput(output)
 
+def callVS():
+    global olgaInstance
+    output = olgaInstance.run("vscode")
+    processOutput(output)
+
 # The key combination to check
 combination_to_function = {
     frozenset([Key.shift, KeyCode(char='a')]): callAdobe,
@@ -54,7 +59,9 @@ combination_to_function = {
     frozenset([Key.shift, KeyCode(char='p')]): callPower,
     frozenset([Key.shift, KeyCode(char='P')]): callPower,
     frozenset([Key.shift, KeyCode(char='w')]): callWord,
-    frozenset([Key.shift, KeyCode(char='W')]): callWord
+    frozenset([Key.shift, KeyCode(char='W')]): callWord,
+    frozenset([Key.shift, KeyCode(char='v')]): callVS,
+    frozenset([Key.shift, KeyCode(char='V')]): callVS
 }
 
 def on_press(key):
