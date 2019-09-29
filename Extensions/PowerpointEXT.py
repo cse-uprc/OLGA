@@ -5,8 +5,8 @@ def install():
     import consts
     print("Installing PowerpointEXT")
     print(consts.COMMANDS_FILE)
-    commandsFile = open(consts.COMMANDS_FILE, "w+")
-    commandsFile.write("powerpoint,PowerpointEXT")
+    commandsFile = open(consts.COMMANDS_FILE, "a")
+    commandsFile.write("powerpoint,PowerpointEXT\n")
     commandsFile.close()
     return 
 

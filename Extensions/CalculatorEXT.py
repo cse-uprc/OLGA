@@ -5,8 +5,8 @@ def install():
     import consts
     print("Installing CalculatorEXT")
     print(consts.COMMANDS_FILE)
-    commandsFile = open(consts.COMMANDS_FILE, "w+")
-    commandsFile.write("calculator,CalculatorEXT")
+    commandsFile = open(consts.COMMANDS_FILE, "a")
+    commandsFile.write("calculator,CalculatorEXT\n")
     commandsFile.close()
     return 
 

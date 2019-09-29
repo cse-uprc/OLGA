@@ -5,8 +5,8 @@ def install():
     import consts
     print("Installing WordEXT")
     print(consts.COMMANDS_FILE)
-    commandsFile = open(consts.COMMANDS_FILE, "w+")
-    commandsFile.write("word,WordEXT")
+    commandsFile = open(consts.COMMANDS_FILE, "a")
+    commandsFile.write("word,WordEXT\n")
     commandsFile.close()
     return 
 

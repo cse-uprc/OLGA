@@ -5,8 +5,8 @@ def install():
     import consts
     print("Installing OutlookEXT")
     print(consts.COMMANDS_FILE)
-    commandsFile = open(consts.COMMANDS_FILE, "w+")
-    commandsFile.write("outlook,OutlookEXT")
+    commandsFile = open(consts.COMMANDS_FILE, "a")
+    commandsFile.write("outlook,OutlookEXT\n")
     commandsFile.close()
     return 
 

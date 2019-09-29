@@ -5,8 +5,8 @@ def install():
     import consts
     print("Installing ItunesEXT")
     print(consts.COMMANDS_FILE)
-    commandsFile = open(consts.COMMANDS_FILE, "w+")
-    commandsFile.write("itunes,ITunesEXT")
+    commandsFile = open(consts.COMMANDS_FILE, "a")
+    commandsFile.write("itunes,ITunesEXT\n")
     commandsFile.close()
     return 
 

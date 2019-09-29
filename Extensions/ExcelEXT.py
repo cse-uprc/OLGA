@@ -5,8 +5,8 @@ def install():
     import consts
     print("Installing ExcelEXT")
     print(consts.COMMANDS_FILE)
-    commandsFile = open(consts.COMMANDS_FILE, "w+")
-    commandsFile.write("excel,ExcelEXT")
+    commandsFile = open(consts.COMMANDS_FILE, "a")
+    commandsFile.write("excel,ExcelEXT\n")
     commandsFile.close()
     return 
 

@@ -5,8 +5,8 @@ def install():
     import consts
     print("Installing AdobeEXT")
     print(consts.COMMANDS_FILE)
-    commandsFile = open(consts.COMMANDS_FILE, "w+")
-    commandsFile.write("adobe,AdobeEXT")
+    commandsFile = open(consts.COMMANDS_FILE, "a")
+    commandsFile.write("adobe,AdobeEXT\n")
     commandsFile.close()
     return 
 

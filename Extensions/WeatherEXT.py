@@ -20,7 +20,7 @@ def install():
     print("Installing WeatherEXT")
     print(consts.COMMANDS_FILE)
     commandsFile = open(consts.COMMANDS_FILE, "a") # w+?
-    commandsFile.write("\ntemperature,WeatherEXT\n")
+    commandsFile.write("temperature,WeatherEXT\n")
     commandsFile.write("clouds,WeatherEXT\n")
     commandsFile.write("pressure,WeatherEXT\n")
     commandsFile.write("humidity,WeatherEXT\n")
