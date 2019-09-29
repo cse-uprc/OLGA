@@ -1,33 +1,61 @@
 import spotipy
 import json
 import os
+import os.path
 import sys
 import spotipy.util as util
 from json.decoder import JSONDecodeError
+import pickle
 
-scope = 'user-read-private user-read-playback-state user-modify-playback-state'
-username = sys.argv[1]
-track = ' '.join(sys.argv[2:])
+def install():
+    # Adds the extensions commands to the command file
+    import consts
+    print("Installing Spotify")
+    print(consts.COMMANDS_FILE)
+    commandsFile = open(consts.COMMANDS_FILE, "a")
+    commandsFile.write("play,spotify\n")
+    commandsFile.close()
+    return 
 
-try:
-    token = util.prompt_for_user_token(username, scope)
+def init():
+    # Log in?
+    return
 
-except:
-    os.remove(f".cache-{username}")
-    token = util.prompt_for_user_token(username, scope)
+def listen(command):
+    scope = 'user-read-private user-read-playback-state user-modify-playback-state'
+    username = "lonemaurader"
+    track = command.replace("play ","")
 
-spotify = spotipy.Spotify(auth=token)
+    import os
+    # Check if there is a spotify token file
+    if (os.path.exists(f".pickle--{username}")):
+        spotify = pickle.load(open( f".pickle--{username}", "rb" ))
+    else:
+        token = util.prompt_for_user_token(username, scope, client_id="", client_secret="", redirect_uri="https://localhost/")
+        # Generate request (before API)
+        spotify = spotipy.Spotify(auth=token)
+        pickle.dump(spotify, open( f".pickle--{username}", "wb" ) ) # thats hot :fire:
 
-devices = spotify.devices()
-print(json.dumps(devices, sort_keys=True, indent=4))
-deviceId = devices['devices'][0]['id']
+    # Get the response (after API)
+    # Look through devices
+    devices = spotify.devices()
+    print(json.dumps(devices, sort_keys=True, indent=4))
+    deviceId = devices['devices'][0]['id']
 
-user = spotify.current_user()
-displayName = user['display_name']
+    # Play/edit/change music
+    tids = [] 
+    results =spotify.search(q=track, limit=1, type='track') 
+    for i, t in enumerate(results['tracks']['items']):
+        tids.append(t['uri'])
+    spotify.start_playback(deviceId, None, tids, None)
 
-tids = [] 
-results =spotify.search(q=track, limit=1, type='track') 
-#spotify.artist_albums(dtp_uri, album_type='album')
-for i, t in enumerate(results['tracks']['items']):
-    tids.append(t['uri'])
-spotify.start_playback(deviceId, None, tids, None)
+    # Adds olga's directory to be accessible
+    import os
+    olgaDir = os.getcwd().replace("Extensions"+os.sep, "")
+    sys.path.append(olgaDir)
+    from olga import makeOOO
+    
+    # Package output into an Olga Output Object
+    output = makeOOO(text="Success")
+
+    return output
