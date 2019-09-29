@@ -6,7 +6,7 @@ def install():
     print("Installing HelloEXT")
     print(consts.COMMANDS_FILE)
     commandsFile = open(consts.COMMANDS_FILE, "w+")
-    commandsFile.write("hello,HelloEXT")
+    commandsFile.write("hello,HelloEXT\n")
     commandsFile.close()
     return 
 
