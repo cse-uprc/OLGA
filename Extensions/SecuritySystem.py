@@ -32,10 +32,8 @@ def listen(command):
                     print(s)
                     threadData.append(s)
             
-            print(threadData)
-            
             if (threadData[1] == "True"):
-                output = makeOOO(text=="Watchdog service already running.")
+                output = makeOOO(text="Watchdog service already running.")
                 return output
                 
             threadFile.close()
@@ -68,11 +66,11 @@ def listen(command):
                 return output
                 
             threadFile.close()
-                
+            
             threadFile = open("threads.data", "w")
             threadFile.write("watchdog:False")
             threadFile.close()
-            os.remove("threads.data")
+            
             output = makeOOO(text="System Disarmed.")
         except Exception as e:
             print(e)
@@ -81,45 +79,47 @@ def listen(command):
     return output
     
 def watchdog():
-    cpuinfo = os.uname()
-    if (cpuinfo[4] != 'armv71'):
-        print(cpuinfo)
+    try:
+        import RPi.GPIO as GPIO
+        import threading
+        import time
+        
+        GPIO.setmode(GPIO.BOARD)
+
+        # Define our input/output pins here
+        inputs = [36]
+        outputs = [38]
+
+        # Setup intputs/outputs
+        GPIO.setup(inputs, GPIO.IN)
+        GPIO.setup(outputs, GPIO.OUT)
+        
+        GPIO.add_event_detect(inputs[0], GPIO.RISING)
+        
+        while (True):
+            threadFile = open("threads.data", "r")
+            threadData = []
+            for line in threadFile.readlines():
+                for s in line[:].split(':'):
+                    threadData.append(s)
+            threadFile.close()
+            
+            if (len(threadData) < 2 or threadData[1] == "False"):
+                print("Okay, so end?")
+                break
+            
+            if (GPIO.event_detected(inputs[0])):
+                print("EVENT")
+                GPIO.output(outputs, GPIO.HIGH)
+                time.sleep(1.5)
+                GPIO.output(outputs, GPIO.LOW)
+        
+        print("Shutting Down Service")
+        GPIO.remove_event_detect(inputs[0])
+        GPIO.cleanup()
+        
         threadFile = open("threads.data", "w")
         threadFile.write("watchdog:False")
-        return None
-    
-    print("Hey!")
-    
-    import RPi.GPIO as GPIO
-    import time
-    
-    GPIO.setmode(GPIO.BOARD)
-
-    # Define our input/output pins here
-    inputs = [36]
-    outputs = [40]
-
-    # Setup intputs/outputs
-    GPIO.setup(inputs, GPIO.IN)
-    GPIO.setup(outputs, GPIO.OUT)
-    
-    while (True):
-        threadFile = open("threads.data", "r")
-        threadData = []
-        for line in threadFile.readlines():
-            line.split(",")[1].replace("\n", "")
-            for s in line[:-1].split(','):
-                threadData.add(s)
-                
-        if (threadData[1] == "False"):
-            threadFile.close()
-            break
-    
-        sensors = GPIO.input(inputs)
-        if (sensors == GPIO.HIGH):
-            GPIO.output(outputs, GPIO.HIGH)
-            time.sleep(1.5)
-            GPIO.output(outputs, GPIO.LOW)
-
-    # Cleanup
-    GPIO.cleanup()
+        
+    except Exception as e:
+        print(e)
